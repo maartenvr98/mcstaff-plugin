@@ -1,0 +1,2 @@
+# mcstaff-plugin
+Mcstaff plugin
