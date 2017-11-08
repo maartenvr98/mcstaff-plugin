@@ -75,14 +75,6 @@ public class Main extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         System.out.println("Mcstaff plugin disabled");
-        try {
-            Connection connection = this.connection;
-            if(connection.isClosed()) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -196,7 +188,7 @@ public class Main extends JavaPlugin implements Listener {
 
         try {
             //Create connection
-            URL url = new URL(this.url+targetURL);
+            URL url = new URL(this.url + targetURL);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type",
