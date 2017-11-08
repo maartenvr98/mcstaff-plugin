@@ -52,6 +52,12 @@ public class Main extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         System.out.println("Plugin disabled");
+        try {
+            Connection connection = this.connection;
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @EventHandler
@@ -82,7 +88,12 @@ public class Main extends JavaPlugin implements Listener {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            //TODO: Close connection in finaly
+            try {
+                Connection connection = this.connection;
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -110,7 +121,12 @@ public class Main extends JavaPlugin implements Listener {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            //TODO: Close connection in finaly
+            try {
+                Connection connection = this.connection;
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
