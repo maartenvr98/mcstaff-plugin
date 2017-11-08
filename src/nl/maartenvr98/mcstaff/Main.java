@@ -38,7 +38,7 @@ public class Main extends JavaPlugin implements Listener {
         config.options().copyDefaults(true);
         saveConfig();
 
-        System.out.println("Plugin enabled");
+        System.out.println("Mcstaff plugin enabled");
         this.getServer().getPluginManager().registerEvents(this, this);
 
         this.host = config.getString("database.host");
@@ -50,7 +50,7 @@ public class Main extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-        System.out.println("Plugin disabled");
+        System.out.println("Mcstaff plugin disabled");
         try {
             Connection connection = this.connection;
             connection.close();
@@ -90,7 +90,7 @@ public class Main extends JavaPlugin implements Listener {
                 e.printStackTrace();
             }
 
-            System.out.println("Login action saved for" + p.getName());
+            System.out.println("Join action saved for" + p.getName());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
