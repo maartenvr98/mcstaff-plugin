@@ -47,7 +47,7 @@ public class Main extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         config.addDefault("enabled", true);
-        config.addDefault("url", "https://www.example.com");
+        config.addDefault("url", "http://www.example.com");
         config.addDefault("key" , "api_key");
         config.addDefault("database.host", "localhost");
         config.addDefault("database.port", 3306);
@@ -187,7 +187,6 @@ public class Main extends JavaPlugin implements Listener {
         HttpURLConnection connection = null;
 
         try {
-            //Create connection
             URL url = new URL(this.url + targetURL);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
@@ -208,7 +207,7 @@ public class Main extends JavaPlugin implements Listener {
 
             InputStream is = connection.getInputStream();
             BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-            StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
+            StringBuilder response = new StringBuilder();
             String line;
             while ((line = rd.readLine()) != null) {
                 response.append(line);
