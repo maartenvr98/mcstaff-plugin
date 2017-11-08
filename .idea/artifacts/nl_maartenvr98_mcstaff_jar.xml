@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="nl.maartenvr98.mcstaff:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/nl_maartenvr98_mcstaff_jar</output-path>
+    <root id="archive" name="nl.maartenvr98.mcstaff.jar">
+      <element id="module-output" name="nl.maartenvr98.mcstaff" />
+      <element id="extracted-dir" path="$USER_HOME$/Documents/projecten/sp-library.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
