@@ -49,10 +49,19 @@ public class Main extends JavaPlugin implements Listener {
         this.getServer().getPluginManager().registerEvents(this, this);
 
         this.host = config.getString("database.host");
-        this.port = config.getInt("database.post");
+        this.port = config.getInt("database.port");
         this.database = config.getString("database.database");
         this.username = config.getString("database.username");
         this.password = config.getString("database.password");
+
+        try {
+            this.openConnection();
+            this.connection.close();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -63,7 +72,9 @@ public class Main extends JavaPlugin implements Listener {
         System.out.println("Mcstaff plugin disabled");
         try {
             Connection connection = this.connection;
-            connection.close();
+            if(connection.isClosed()) {
+                connection.close();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -92,7 +103,7 @@ public class Main extends JavaPlugin implements Listener {
 
             try {
                 statement.executeUpdate("INSERT INTO players (name, uuid, lastlogin, lastip) " +
-                        "VALUES ('" + p.getName() + "', '" + p.getUniqueId().toString() + "', '" + fullFormat.format(date) + "', '" + p.getAddress().getHostName() + "') " +
+                        "VALUES ('" + p.getName() + "', '" + p.getUniqueId().toString().replaceAll("-", "") + "', '" + fullFormat.format(date) + "', '" + p.getAddress().getHostString() + "') " +
                         "ON DUPLICATE KEY UPDATE lastlogin = values(lastlogin), lastip = values(lastip)");
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -100,23 +111,17 @@ public class Main extends JavaPlugin implements Listener {
 
             try {
                 statement.executeUpdate("INSERT INTO players_events (uuid, type, date, time) " +
-                        "VALUES ('" + p.getUniqueId().toString() + "', 'join', '" + dateFormat.format(date) + "', '" + timeFormat.format(date) + "');");
+                        "VALUES ('" + p.getUniqueId().toString().replaceAll("-", "") + "', 'join', '" + dateFormat.format(date) + "', '" + timeFormat.format(date) + "')");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
 
             System.out.println("Join action saved for" + p.getName());
+            this.connection.close();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                Connection connection = this.connection;
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
 
     }
@@ -142,24 +147,18 @@ public class Main extends JavaPlugin implements Listener {
             Date date = new Date();
 
             try {
-                statement.executeUpdate("INSERT INTO player_events (uuid, type, date, time " +
-                        "VALUES ('" + p.getUniqueId().toString() + "', 'leave', '" + dateFormat.format(date) + "', '" + timeFormat.format(date) + "')");
+                statement.executeUpdate("INSERT INTO players_events (uuid, type, date, time) " +
+                        "VALUES ('" + p.getUniqueId().toString().replaceAll("-", "") + "', 'leave', '" + dateFormat.format(date) + "', '" + timeFormat.format(date) + "')");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
 
             System.out.println("Leave action saved for " + p.getName());
+            this.connection.close();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                Connection connection = this.connection;
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 
