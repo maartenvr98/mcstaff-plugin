@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/nl.maartenvr98.mcstaff/nl.maartenvr98.mcstaff.iml" filepath="$PROJECT_DIR$/nl.maartenvr98.mcstaff/nl.maartenvr98.mcstaff.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mcstaff-plugin.iml" filepath="$PROJECT_DIR$/mcstaff-plugin.iml" />
     </modules>
   </component>
 </project>
