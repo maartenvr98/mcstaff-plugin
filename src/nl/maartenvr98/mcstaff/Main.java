@@ -16,6 +16,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * @author maartenvr98
+ * @version 1
+ */
 public class Main extends JavaPlugin implements Listener {
 
     private Connection connection;
@@ -27,6 +31,9 @@ public class Main extends JavaPlugin implements Listener {
 
     private FileConfiguration config = getConfig();
 
+    /**
+     * Plugin enabled
+     */
     @Override
     public void onEnable() {
         config.addDefault("enabled", true);
@@ -48,6 +55,9 @@ public class Main extends JavaPlugin implements Listener {
         this.password = config.getString("database.password");
     }
 
+    /**
+     * Plugin disabled
+     */
     @Override
     public void onDisable() {
         System.out.println("Mcstaff plugin disabled");
@@ -59,6 +69,11 @@ public class Main extends JavaPlugin implements Listener {
         }
     }
 
+    /**
+     * Player join event
+     *
+     * @param event
+     */
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         if(!config.getBoolean("enabled")) {
@@ -106,6 +121,11 @@ public class Main extends JavaPlugin implements Listener {
 
     }
 
+    /**
+     * Player quit event
+     *
+     * @param event
+     */
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         if(!config.getBoolean("enabled")) {
@@ -143,6 +163,12 @@ public class Main extends JavaPlugin implements Listener {
         }
     }
 
+    /**
+     * Connect to MySQL database
+     *
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     */
     private void openConnection() throws SQLException, ClassNotFoundException {
         if (this.connection == null || this.connection.isClosed()) {
             synchronized(this) {
