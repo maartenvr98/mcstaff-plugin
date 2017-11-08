@@ -31,11 +31,11 @@ public class Main extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         config.addDefault("enabled", true);
-        config.addDefault("database.host", "80.82.222.241");
+        config.addDefault("database.host", "localhost");
         config.addDefault("database.port", 3306);
-        config.addDefault("database.username", "java");
-        config.addDefault("database.password", "bHts0~06");
-        config.addDefault("database.database", "test_java");
+        config.addDefault("database.username", "MySecretUsername");
+        config.addDefault("database.password", "MySecretPassword");
+        config.addDefault("database.database", "players");
         config.options().copyDefaults(true);
         saveConfig();
 
