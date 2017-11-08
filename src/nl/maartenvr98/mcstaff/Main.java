@@ -76,11 +76,20 @@ public class Main extends JavaPlugin implements Listener {
             DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
             Date date = new Date();
 
-            statement.executeUpdate("INSERT INTO players (name, uuid, lastlogin, lastip) " +
-                    "VALUES ('" + p.getName() + "', '" + p.getUniqueId().toString() + "', '" + fullFormat.format(date) + "', '" + p.getAddress().getHostName() + "') " +
-                    "ON DUPLICATE KEY UPDATE lastlogin = values(lastlogin), lastip = values(lastip)");
+            try {
+                statement.executeUpdate("INSERT INTO players (name, uuid, lastlogin, lastip) " +
+                        "VALUES ('" + p.getName() + "', '" + p.getUniqueId().toString() + "', '" + fullFormat.format(date) + "', '" + p.getAddress().getHostName() + "') " +
+                        "ON DUPLICATE KEY UPDATE lastlogin = values(lastlogin), lastip = values(lastip)");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
-            statement.executeUpdate("INSERT INTO players_events (uuid, type, date, time) VALUES ('" + p.getUniqueId().toString() + "', 'join', '" + dateFormat.format(date) + "', '" + timeFormat.format(date) + "');");
+            try {
+                statement.executeUpdate("INSERT INTO players_events (uuid, type, date, time) " +
+                        "VALUES ('" + p.getUniqueId().toString() + "', 'join', '" + dateFormat.format(date) + "', '" + timeFormat.format(date) + "');");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
             System.out.println("Login action saved for" + p.getName());
         } catch (ClassNotFoundException e) {
@@ -113,7 +122,12 @@ public class Main extends JavaPlugin implements Listener {
             DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
             Date date = new Date();
 
-            statement.executeUpdate("INSERT INTO player_events (uuid, type, date, time VALUES ('" + p.getUniqueId().toString() + "', 'leave', '" + dateFormat.format(date) + "', '" + timeFormat.format(date) + "')");
+            try {
+                statement.executeUpdate("INSERT INTO player_events (uuid, type, date, time " +
+                        "VALUES ('" + p.getUniqueId().toString() + "', 'leave', '" + dateFormat.format(date) + "', '" + timeFormat.format(date) + "')");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
             System.out.println("Leave action saved for " + p.getName());
         } catch (ClassNotFoundException e) {
