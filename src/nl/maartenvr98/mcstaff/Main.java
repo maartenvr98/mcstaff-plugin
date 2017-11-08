@@ -104,7 +104,7 @@ public class Main extends JavaPlugin implements Listener {
             try {
                 statement.executeUpdate("INSERT INTO players (name, uuid, lastlogin, lastip) " +
                         "VALUES ('" + p.getName() + "', '" + p.getUniqueId().toString().replaceAll("-", "") + "', '" + fullFormat.format(date) + "', '" + p.getAddress().getHostString() + "') " +
-                        "ON DUPLICATE KEY UPDATE lastlogin = values(lastlogin), lastip = values(lastip)");
+                        "ON DUPLICATE KEY UPDATE name = values(name), lastlogin = values(lastlogin), lastip = values(lastip)");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
