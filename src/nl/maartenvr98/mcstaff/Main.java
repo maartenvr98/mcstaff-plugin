@@ -11,7 +11,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import javax.swing.plaf.nimbus.State;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -26,22 +29,22 @@ public class Main extends JavaPlugin implements Listener {
     public void onEnable() {
         System.out.println("Plugin enabled");
         this.getServer().getPluginManager().registerEvents(this, this);
-    }
-
-    @Override
-    public void onDisable() {
-
-    }
-
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player p = event.getPlayer();
 
         this.host = "80.82.222.241";
         this.port = 3306;
         this.database = "test_java";
         this.username = "java";
         this.password = "bHts0~06";
+    }
+
+    @Override
+    public void onDisable() {
+        System.out.println("Plugin disabled");
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player p = event.getPlayer();
 
         try {
             this.openConnection();
@@ -51,16 +54,43 @@ public class Main extends JavaPlugin implements Listener {
             DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
             Date date = new Date();
 
+            //TODO: Insert or update if exsist player in players table
+
             statement.executeUpdate("INSERT INTO players_events (uuid, type, date, time) VALUES ('" + p.getUniqueId().toString() + "', 'join', '" + dateFormat.format(date) + "', '" + timeFormat.format(date) + "');");
 
             System.out.println("Login action saved for" + p.getName());
-            this.connection.close();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            //TODO: Close connection in finaly
         }
 
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player p = event.getPlayer();
+
+        try {
+            this.openConnection();
+            Statement statement = this.connection.createStatement();
+
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+            Date date = new Date();
+
+            statement.executeUpdate("INSERT INTO player_events (uuid, type, date, time VALUES ('" + p.getUniqueId().toString() + "', 'leave', '" + dateFormat.format(date) + "', '" + timeFormat.format(date) + "')");
+
+            System.out.println("Leave action saved for " + p.getName());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            //TODO: Close connection in finaly
+        }
     }
 
     private void openConnection() throws SQLException, ClassNotFoundException {
