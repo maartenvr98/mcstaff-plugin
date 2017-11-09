@@ -2,7 +2,6 @@ package nl.maartenvr98.mcstaff;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import com.google.gson.Gson;
@@ -92,6 +91,7 @@ public class Main extends JavaPlugin implements Listener {
             return;
         }
         Player p = event.getPlayer();
+        p.getDisplayName();
 
         try {
             executePost("addplayer", "key="+this.key+"" +
@@ -106,11 +106,11 @@ public class Main extends JavaPlugin implements Listener {
             executePost("addevent", "key="+this.key+"" +
                     "&uuid="+p.getUniqueId().toString().replaceAll("-", "")+"" +
                     "&type=join");
+
+            System.out.println("Join action saved for" + p.getName());
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        System.out.println("Join action saved for" + p.getName());
     }
 
     /**
@@ -130,11 +130,11 @@ public class Main extends JavaPlugin implements Listener {
             executePost("addevent", "key="+this.key+"" +
                     "&uuid="+p.getUniqueId().toString().replaceAll("-", "")+"" +
                     "&type=leave");
+
+            System.out.println("Leave action saved for " + p.getName());
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        System.out.println("Leave action saved for " + p.getName());
     }
 
     /**
