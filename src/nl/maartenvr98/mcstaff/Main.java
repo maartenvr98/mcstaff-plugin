@@ -1,13 +1,13 @@
 package nl.maartenvr98.mcstaff;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
-import jdk.nashorn.internal.parser.JSONParser;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,9 +15,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.json.simple.JSONObject;
-
-//TODO: Post request to api instead of database
 
 /**
  * @author maartenvr98
@@ -51,8 +48,26 @@ public class Main extends JavaPlugin implements Listener {
         this.enabled = config.getBoolean("enabled");
 
         if(this.enabled) {
-            String result = executePost("connect", "key="+this.key);
-            //TODO: Check if key from config is correct
+            try {
+                String result = executePost("connect", "key="+this.key);
+
+                Gson gson = new Gson();
+                JsonObject jsonResult = gson.fromJson(result, JsonObject.class);
+
+                String status = jsonResult.get("status").getAsString();
+                if(!status.equals("granted")) {
+                    this.enabled = false;
+
+                    System.out.println("----------------Mcstaff-----------------\n");
+                    System.out.println("Plugin disabled due incorrect key\n");
+                    System.out.println("----------------------------------------");
+                }
+            } catch (IOException e) {
+                this.enabled = false;
+                System.out.println("----------------Mcstaff-----------------\n");
+                System.out.println("Could not connect to REST service\n");
+                System.out.println("----------------------------------------");
+            }
         }
     }
 
@@ -78,14 +93,22 @@ public class Main extends JavaPlugin implements Listener {
         }
         Player p = event.getPlayer();
 
-        executePost("addplayer", "key="+this.key+"" +
-                "&name="+p.getName()+"" +
-                "&uuid="+p.getUniqueId().toString().replaceAll("-", "")+"" +
-                "&lastip="+p.getAddress().getHostString());
+        try {
+            executePost("addplayer", "key="+this.key+"" +
+                    "&name="+p.getName()+"" +
+                    "&uuid="+p.getUniqueId().toString().replaceAll("-", "")+"" +
+                    "&lastip="+p.getAddress().getHostString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        executePost("addevent", "key="+this.key+"" +
-                "&uuid="+p.getUniqueId().toString().replaceAll("-", "")+"" +
-                "&type=join");
+        try {
+            executePost("addevent", "key="+this.key+"" +
+                    "&uuid="+p.getUniqueId().toString().replaceAll("-", "")+"" +
+                    "&type=join");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         System.out.println("Join action saved for" + p.getName());
     }
@@ -103,9 +126,13 @@ public class Main extends JavaPlugin implements Listener {
         }
         Player p = event.getPlayer();
 
-        executePost("addevent", "key="+this.key+"" +
-                "&uuid="+p.getUniqueId().toString().replaceAll("-", "")+"" +
-                "&type=leave");
+        try {
+            executePost("addevent", "key="+this.key+"" +
+                    "&uuid="+p.getUniqueId().toString().replaceAll("-", "")+"" +
+                    "&type=leave");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         System.out.println("Leave action saved for " + p.getName());
     }
@@ -117,7 +144,7 @@ public class Main extends JavaPlugin implements Listener {
      * @param urlParameters
      * @return
      */
-    private String executePost(String targetURL, String urlParameters) {
+    private String executePost(String targetURL, String urlParameters) throws IOException {
         HttpURLConnection connection = null;
 
         try {
@@ -149,9 +176,6 @@ public class Main extends JavaPlugin implements Listener {
             }
             rd.close();
             return response.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
         } finally {
             if (connection != null) {
                 connection.disconnect();
