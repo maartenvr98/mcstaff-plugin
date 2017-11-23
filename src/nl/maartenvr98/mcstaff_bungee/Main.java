@@ -33,8 +33,6 @@ public class Main extends Plugin {
         config.getConfig().set("key", "api_key");
         config.saveConfig();
 
-        System.out.println("Mcstaff plugin enabled");
-
         this.enabled = config.getConfig().getBoolean("enabled");
         this.url = config.getConfig().getString("url");
         this.key = config.getConfig().getString("key");
@@ -54,6 +52,7 @@ public class Main extends Plugin {
                     System.out.println("Plugin disabled due incorrect key\n");
                     System.out.println("----------------------------------------");
                 }
+                System.out.println("Mcstaff plugin enabled");
             } catch (IOException e) {
                 this.enabled = false;
                 System.out.println("----------------Mcstaff-----------------\n");
@@ -68,7 +67,9 @@ public class Main extends Plugin {
      */
     @Override
     public void onDisable() {
-        System.out.println("Mcstaff plugin disabled");
+        if(this.enabled) {
+            System.out.println("Mcstaff plugin disabled");
+        }
     }
 
     /**
