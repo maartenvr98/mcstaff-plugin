@@ -71,7 +71,7 @@ public class Main extends JavaPlugin implements Listener {
     }
 
     /**
-     * Plugin disabled6
+     * Plugin disabled
      */
     @Override
     public void onDisable() {
