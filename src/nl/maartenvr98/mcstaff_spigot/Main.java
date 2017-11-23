@@ -40,7 +40,6 @@ public class Main extends JavaPlugin implements Listener {
         config.options().copyDefaults(true);
         saveConfig();
 
-        System.out.println("Mcstaff plugin enabled");
         this.getServer().getPluginManager().registerEvents(this, this);
 
         this.key = config.getString("key");
@@ -57,14 +56,20 @@ public class Main extends JavaPlugin implements Listener {
                 if(!status.equals("granted")) {
                     this.enabled = false;
 
-                    System.out.println("----------------Mcstaff-----------------\n");
-                    System.out.println("Plugin disabled due incorrect key\n");
+                    System.out.println("----------------Mcstaff-----------------");
+                    System.out.println(" ");
+                    System.out.println("Plugin disabled due incorrect key");
+                    System.out.println(" ");
                     System.out.println("----------------------------------------");
+                } else {
+                    System.out.println("Mcstaff plugin enabled");
                 }
             } catch (IOException e) {
                 this.enabled = false;
-                System.out.println("----------------Mcstaff-----------------\n");
-                System.out.println("Could not connect to REST service\n");
+                System.out.println("----------------Mcstaff-----------------");
+                System.out.println(" ");
+                System.out.println("Could not connect to REST service");
+                System.out.println(" ");
                 System.out.println("----------------------------------------");
             }
         }

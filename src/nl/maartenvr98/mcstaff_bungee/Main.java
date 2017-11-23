@@ -2,8 +2,10 @@ package nl.maartenvr98.mcstaff_bungee;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import net.md_5.bungee.api.event.LoginEvent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
+import net.md_5.bungee.api.event.PostLoginEvent;
+import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.event.EventHandler;
 
@@ -11,7 +13,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class Main extends Plugin {
+public class Main extends Plugin implements Listener {
 
     private boolean enabled;
     private String url;
@@ -28,10 +30,12 @@ public class Main extends Plugin {
     public void onEnable() {
         config = new BungeeConfig(this, "config");
 
-        config.getConfig().set("enabled", true);
-        config.getConfig().set("url", "http://www.example.com");
-        config.getConfig().set("key", "api_key");
-        config.saveConfig();
+        //config.getConfig().set("enabled", true);
+        //config.getConfig().set("url", "http://www.example.com");
+        //config.getConfig().set("key", "api_key");
+        //config.saveConfig();
+
+        getProxy().getPluginManager().registerListener(this, this);
 
         this.enabled = config.getConfig().getBoolean("enabled");
         this.url = config.getConfig().getString("url");
@@ -48,15 +52,20 @@ public class Main extends Plugin {
                 if(!status.equals("granted")) {
                     this.enabled = false;
 
-                    System.out.println("----------------Mcstaff-----------------\n");
-                    System.out.println("Plugin disabled due incorrect key\n");
+                    System.out.println("----------------Mcstaff-----------------");
+                    System.out.println(" ");
+                    System.out.println("Plugin disabled due incorrect key");
+                    System.out.println(" ");
                     System.out.println("----------------------------------------");
+                }else {
+                    System.out.println("Mcstaff plugin enabled");
                 }
-                System.out.println("Mcstaff plugin enabled");
             } catch (IOException e) {
                 this.enabled = false;
-                System.out.println("----------------Mcstaff-----------------\n");
-                System.out.println("Could not connect to REST service\n");
+                System.out.println("----------------Mcstaff-----------------");
+                System.out.println(" ");
+                System.out.println("Could not connect to REST service");
+                System.out.println(" ");
                 System.out.println("----------------------------------------");
             }
         }
@@ -80,9 +89,28 @@ public class Main extends Plugin {
      * @param event
      */
     @EventHandler
-    public void onLogin(LoginEvent event) {
+    public void onLogin(PostLoginEvent event) {
         if(this.enabled) {
-            // TODO: Execute posts to REST service
+            ProxiedPlayer p = event.getPlayer();
+
+            try {
+                executePost("addplayer", "key="+this.key+"" +
+                        "&name="+p.getName()+"" +
+                        "&uuid="+p.getUniqueId().toString().replaceAll("-", "")+"" +
+                        "&lastip="+p.getAddress().getHostString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                executePost("addevent", "key="+this.key+"" +
+                        "&uuid="+p.getUniqueId().toString().replaceAll("-", "")+"" +
+                        "&type=join");
+
+                System.out.println("Join action saved for" + p.getName());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -95,7 +123,17 @@ public class Main extends Plugin {
     @EventHandler
     public void onLeave(PlayerDisconnectEvent event) {
         if(this.enabled) {
-            // TODO: Execute posts to REST service
+            ProxiedPlayer p = event.getPlayer();
+
+            try {
+                executePost("addevent", "key="+this.key+"" +
+                        "&uuid="+p.getUniqueId().toString().replaceAll("-", "")+"" +
+                        "&type=leave");
+
+                System.out.println("Leave action saved for " + p.getName());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
