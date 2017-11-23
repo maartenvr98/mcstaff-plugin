@@ -1,4 +1,4 @@
-package nl.maartenvr98.mcstaff;
+package nl.maartenvr98.mcstaff_spigot;
 
 import java.io.*;
 import java.net.HttpURLConnection;

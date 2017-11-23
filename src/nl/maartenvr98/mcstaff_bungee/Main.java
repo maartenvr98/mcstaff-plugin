@@ -1,8 +1,11 @@
 package nl.maartenvr98.mcstaff_bungee;
 
-import net.md_5.bungee.api.event.PostLoginEvent;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import net.md_5.bungee.api.event.LoginEvent;
+import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.plugin.Plugin;
-import org.bukkit.event.EventHandler;
+import net.md_5.bungee.event.EventHandler;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -10,10 +13,10 @@ import java.net.URL;
 
 public class Main extends Plugin {
 
-    private Plugin plugin;
-    private String key;
-    private String url;
     private boolean enabled;
+    private String url;
+    private String key;
+    private BungeeConfig config;
 
     /**
      * Plugin enabled
@@ -23,10 +26,41 @@ public class Main extends Plugin {
      */
     @Override
     public void onEnable() {
-        System.out.println("Mcstaff plugin enabled");
-        createConfig();
+        config = new BungeeConfig(this, "config");
 
-        this.url = "http://www.example.com/api";
+        config.getConfig().set("enabled", true);
+        config.getConfig().set("url", "http://www.example.com");
+        config.getConfig().set("key", "api_key");
+        config.saveConfig();
+
+        System.out.println("Mcstaff plugin enabled");
+
+        this.enabled = config.getConfig().getBoolean("enabled");
+        this.url = config.getConfig().getString("url");
+        this.key = config.getConfig().getString("key");
+
+        if(this.enabled) {
+            try {
+                String result = executePost("connect", "key="+this.key);
+
+                Gson gson = new Gson();
+                JsonObject jsonResult = gson.fromJson(result, JsonObject.class);
+
+                String status = jsonResult.get("status").getAsString();
+                if(!status.equals("granted")) {
+                    this.enabled = false;
+
+                    System.out.println("----------------Mcstaff-----------------\n");
+                    System.out.println("Plugin disabled due incorrect key\n");
+                    System.out.println("----------------------------------------");
+                }
+            } catch (IOException e) {
+                this.enabled = false;
+                System.out.println("----------------Mcstaff-----------------\n");
+                System.out.println("Could not connect to REST service\n");
+                System.out.println("----------------------------------------");
+            }
+        }
     }
 
     /**
@@ -37,31 +71,31 @@ public class Main extends Plugin {
         System.out.println("Mcstaff plugin disabled");
     }
 
+    /**
+     * Player join event
+     * Add player in database. Checking if not exsist will handled in the api
+     * Send request to webserver with join event
+     *
+     * @param event
+     */
     @EventHandler
-    public void onPostLogin(PostLoginEvent event) {
-
+    public void onLogin(LoginEvent event) {
+        if(this.enabled) {
+            // TODO: Execute posts to REST service
+        }
     }
 
     /**
-     * Create config file to save plugin variables
+     * Player quit event
+     * Send request to webserver with leave event
+     *
+     * @param event
      */
-    private void createConfig() {
-        try {
-            if (!getDataFolder().exists()) {
-                getDataFolder().mkdirs();
-            }
-            File file = new File(getDataFolder(), "config.yml");
-            if (!file.exists()) {
-                getLogger().info("Config.yml not found, creating!");
-                //saveDefaultConfig();
-            } else {
-                getLogger().info("Config.yml found, loading!");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-
+    @EventHandler
+    public void onLeave(PlayerDisconnectEvent event) {
+        if(this.enabled) {
+            // TODO: Execute posts to REST service
         }
-
     }
 
     /**
