@@ -32,6 +32,19 @@ public class BungeeConfig {
                 try (InputStream is = plugin.getResourceAsStream(name + ".yml");
                      OutputStream os = new FileOutputStream(file)) {
                     ByteStreams.copy(is, os);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        configuration.set("enabled", true);
+                        configuration.set("url", "http://www.example.com");
+                        configuration.set("key", "api_key");
+                        saveConfig();
+                    }
                 }
             } catch (IOException e) {
                 throw new RuntimeException("Unable to create configuration file", e);

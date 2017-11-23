@@ -30,11 +30,6 @@ public class Main extends Plugin implements Listener {
     public void onEnable() {
         config = new BungeeConfig(this, "config");
 
-        //config.getConfig().set("enabled", true);
-        //config.getConfig().set("url", "http://www.example.com");
-        //config.getConfig().set("key", "api_key");
-        //config.saveConfig();
-
         getProxy().getPluginManager().registerListener(this, this);
 
         this.enabled = config.getConfig().getBoolean("enabled");
