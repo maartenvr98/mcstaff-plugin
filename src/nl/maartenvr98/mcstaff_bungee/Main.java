@@ -9,6 +9,10 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.event.EventHandler;
 
+import nl.maartenvr98.mcstaff_bungee.commands.ReloadCommand;
+import nl.maartenvr98.mcstaff_bungee.commands.SetCommand;
+import nl.maartenvr98.mcstaff_bungee.config.Config;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -18,7 +22,7 @@ public class Main extends Plugin implements Listener {
     private boolean enabled;
     private String url;
     private String key;
-    private BungeeConfig config;
+    private Config config;
 
     /**
      * Plugin enabled
@@ -28,9 +32,12 @@ public class Main extends Plugin implements Listener {
      */
     @Override
     public void onEnable() {
-        config = new BungeeConfig(this, "config");
+        config = new Config(this, "config");
 
         getProxy().getPluginManager().registerListener(this, this);
+        getProxy().getPluginManager().registerCommand(this, new SetCommand());
+        getProxy().getPluginManager().registerCommand(this, new ReloadCommand());
+
 
         this.enabled = config.getConfig().getBoolean("enabled");
         this.url = config.getConfig().getString("url");

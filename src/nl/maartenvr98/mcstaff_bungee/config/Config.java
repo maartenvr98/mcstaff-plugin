@@ -1,4 +1,4 @@
-package nl.maartenvr98.mcstaff_bungee;
+package nl.maartenvr98.mcstaff_bungee.config;
 
 import com.google.common.io.ByteStreams;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -8,7 +8,7 @@ import net.md_5.bungee.config.YamlConfiguration;
 
 import java.io.*;
 
-public class BungeeConfig {
+public class Config {
 
     private Configuration configuration;
     private File file;
@@ -19,7 +19,7 @@ public class BungeeConfig {
      * @param plugin
      * @param name
      */
-    public BungeeConfig(Plugin plugin, String name) {
+    public Config(Plugin plugin, String name) {
         if (!plugin.getDataFolder().exists()) {
             plugin.getDataFolder().mkdir();
         }
