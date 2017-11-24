@@ -55,22 +55,13 @@ public class Main extends JavaPlugin implements Listener {
                 String status = jsonResult.get("status").getAsString();
                 if(!status.equals("granted")) {
                     this.enabled = false;
-
-                    System.out.println("----------------Mcstaff-----------------");
-                    System.out.println(" ");
-                    System.out.println("Plugin disabled due incorrect key");
-                    System.out.println(" ");
-                    System.out.println("----------------------------------------");
+                    SendMessage("Plugin disabled due incorrect key");
                 } else {
                     System.out.println("Mcstaff plugin enabled");
                 }
             } catch (IOException e) {
                 this.enabled = false;
-                System.out.println("----------------Mcstaff-----------------");
-                System.out.println(" ");
-                System.out.println("Could not connect to REST service");
-                System.out.println(" ");
-                System.out.println("----------------------------------------");
+                SendMessage("Could not connect to REST service");
             }
         }
     }
@@ -186,5 +177,13 @@ public class Main extends JavaPlugin implements Listener {
                 connection.disconnect();
             }
         }
+    }
+
+    public void SendMessage(String message) {
+        System.out.println("----------------Mcstaff-----------------");
+        System.out.println(" ");
+        System.out.println(message);
+        System.out.println(" ");
+        System.out.println("----------------------------------------");
     }
 }
