@@ -10,7 +10,7 @@ public class ReloadCommand extends Command {
     }
 
     @Override
-    public void execute(CommandSender commandSender, String[] strings) {
+    public void execute(CommandSender sender, String[] strings) {
 
     }
 }
