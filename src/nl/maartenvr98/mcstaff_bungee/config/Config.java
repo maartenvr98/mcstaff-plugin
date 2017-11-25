@@ -15,6 +15,7 @@ public class Config {
     private String name;
 
     /**
+     * Main function
      *
      * @param plugin
      * @param name
@@ -59,15 +60,16 @@ public class Config {
     }
 
     /**
+     * Return config file for using in Other classs
      *
-     * @return the config file
+     * @return
      */
     public Configuration getConfig() {
         return configuration;
     }
 
     /**
-     * Save the config
+     * Save config file in plugin folder
      */
     public void saveConfig() {
         try {
@@ -78,7 +80,7 @@ public class Config {
     }
 
     /**
-     * reload the config
+     * Reload config after edits.
      */
     public void reloadConfig() {
         try {
