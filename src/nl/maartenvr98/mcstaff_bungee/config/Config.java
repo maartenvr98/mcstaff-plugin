@@ -43,7 +43,7 @@ public class Config {
                     } finally {
                         configuration.set("enabled", true);
                         configuration.set("url", "http://www.example.com");
-                        configuration.set("key", "api_key");
+                        configuration.set("key", "SecretKey");
                         saveConfig();
                     }
                 }
