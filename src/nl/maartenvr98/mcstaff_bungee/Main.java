@@ -9,7 +9,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.event.EventHandler;
 
-import nl.maartenvr98.mcstaff_bungee.commands.ReloadCommand;
+import nl.maartenvr98.mcstaff_bungee.commands.Commands;
 import nl.maartenvr98.mcstaff_bungee.commands.SetCommand;
 import nl.maartenvr98.mcstaff_bungee.config.Config;
 
@@ -35,8 +35,7 @@ public class Main extends Plugin implements Listener {
         config = new Config(this, "config");
 
         getProxy().getPluginManager().registerListener(this, this);
-        getProxy().getPluginManager().registerCommand(this, new SetCommand());
-        getProxy().getPluginManager().registerCommand(this, new ReloadCommand());
+        getProxy().getPluginManager().registerCommand(this, new Commands(config));
 
 
         this.enabled = config.getConfig().getBoolean("enabled");
