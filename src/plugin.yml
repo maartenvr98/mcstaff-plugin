@@ -2,3 +2,8 @@ name: mcstaff
 version: 1
 author: maartenvr98
 main: nl.maartenvr98.mcstaff_spigot.Main
+
+commands:
+    mcstaff:
+        description: Main command mcstaff
+        usage: /mcstaff
