@@ -14,7 +14,7 @@ public class Commands extends Command {
     private final Connect connection;
 
     public Commands(Config config) {
-        super("mcstaff", "mcstaff.reload");
+        super("mcstaff", "mcstaff.admin");
         this.config = config;
         this.connection = new Connect(config);
     }
