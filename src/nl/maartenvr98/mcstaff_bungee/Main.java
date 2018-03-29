@@ -22,7 +22,7 @@ public class Main extends Plugin {
         getProxy().getPluginManager().registerListener(this, new Leave(config));
         getProxy().getPluginManager().registerCommand(this, new Commands(config));
 
-        this.key = config.getConfig().getString("key");
+        this.key = config.getConfig().getString("mcstaff");
     }
 
     /**
