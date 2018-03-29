@@ -32,7 +32,7 @@ public class Main extends JavaPlugin {
 
         this.getServer().getPluginManager().registerEvents(new Join(), this);
         this.getServer().getPluginManager().registerEvents(new Leave(), this);
-        this.getCommand("kit").setExecutor(new Commands());
+        this.getCommand("mcstaff").setExecutor(new Commands());
     }
 
     /**
